@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router";
 import App from "../App";
 import NotFound from "../Pages/Not-Found";
 import Home from "../Pages/Home";
+import ProductDetails from "../Pages/Details";
+import WishListPage from "../Pages/wishList";
 
 export const router = createBrowserRouter([
   {
@@ -12,8 +14,17 @@ export const router = createBrowserRouter([
     children:[
       {
         index: true,
-        Component: Home,
-      }
+        errorElement: <NotFound />,
+        Component: Home
+      },
+      {
+        path: "/details",
+        Component: ProductDetails
+      },
+      {
+        path: "/wishlist",
+        Component: WishListPage
+      },
     ]
   }
 ]);
