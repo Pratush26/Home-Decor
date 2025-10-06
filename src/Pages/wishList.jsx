@@ -2,6 +2,7 @@ import { Link } from "react-router"
 import { useFetch } from "../Hooks/useFetch"
 import { useEffect, useState } from "react"
 import { AddToWishList, findDB } from "../utility/localDb"
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 export default function WishListPage() {
   const { loading, err, data } = useFetch('/furnitureData.json');
@@ -19,6 +20,16 @@ export default function WishListPage() {
     AddToWishList(i, n);
     setLocalData(findDB('wishList'));
   };
+
+  //generate chart data
+  const countsByCategory = {}
+  dataset.forEach(item => {
+    countsByCategory[item.category] = (countsByCategory[item.category] || 0) + 1
+  })
+  const dataList = Object.entries(countsByCategory).map(([category, quantity]) => ({
+    category,
+    quantity
+  }))
 
   return (
     <main className="w-11/12 mx-auto my-8">
@@ -72,6 +83,17 @@ export default function WishListPage() {
           )}
         </section>
       )}
+      <section className="w-full h-[50vh] my-10">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart width={600} height={300} data={dataList}>
+            <XAxis dataKey="category" stroke="#8884d8" />
+            <YAxis />
+            <Tooltip />
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <Bar dataKey="quantity" fill="#8884d8" barSize={30} />
+          </BarChart>
+        </ResponsiveContainer>
+      </section>
     </main>
   );
 }
